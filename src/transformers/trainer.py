@@ -1761,6 +1761,7 @@ class Trainer:
         from accelerate import dispatch_model
         local_rank = os.environ.get('LOCAL_RANK')
         print('local_rank', local_rank, args.device)
+        model = dispatch_model(model, device_map={'': int(args.device.split(':')[-1])})
         model = model.to(args.device)
 
         model.zero_grad()
@@ -2708,6 +2709,7 @@ class Trainer:
             for k in inputs:
                 inputs[k] = inputs[k].to(self.args.device)
             
+            print(inputs[k]['input_ids'].shape)
             loss = self.compute_loss(model, inputs)
             print(loss)
 
