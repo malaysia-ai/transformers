@@ -1655,8 +1655,6 @@ class Trainer:
         # prepare using `accelerator` prepare
         if use_accelerator_prepare:
             self.model.train()
-            for i in model.named_parameters():
-                print(f"before {i[0]} -> {i[1].device}")
             if hasattr(self.lr_scheduler, "step"):
                 if self.use_apex:
                     model = self.accelerator.prepare(self.model)
@@ -1668,7 +1666,7 @@ class Trainer:
                     self.model, self.optimizer, self.lr_scheduler
                 )
             for i in model.named_parameters():
-                print(f"after {i[0]} -> {i[1].device}")
+                print(f"after {i[0]} -> {i[1].device}, {self.args.device}")
 
         if self.is_fsdp_enabled:
             self.model = self.model_wrapped = model
