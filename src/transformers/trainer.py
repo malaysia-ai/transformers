@@ -2710,7 +2710,7 @@ class Trainer:
             for k in inputs:
                 inputs[k] = inputs[k].to(self.args.device)
             
-            print(inputs[k]['input_ids'].shape)
+            print(inputs['input_ids'].shape)
             loss = self.compute_loss(model, inputs)
             print(loss)
 
