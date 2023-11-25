@@ -1757,6 +1757,9 @@ class Trainer:
         # _total_loss_scalar is updated everytime .item() has to be called on tr_loss and stores the sum of all losses
         self._total_loss_scalar = 0.0
         self._globalstep_last_logged = self.state.global_step
+
+        from accelerate import dispatch_model
+        model = dispatch_model(model, device_map={'': 0})
         model.zero_grad()
 
         self.control = self.callback_handler.on_train_begin(args, self.state, self.control)
