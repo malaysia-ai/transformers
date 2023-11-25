@@ -2698,7 +2698,8 @@ class Trainer:
             return loss_mb.reduce_mean().detach().to(self.args.device)
 
         with self.compute_loss_context_manager():
-            print(inputs)
+            for k in inputs:
+                inputs[k] = inputs[k].to('cuda:0')
             loss = self.compute_loss(model, inputs)
 
         if self.args.n_gpu > 1:
