@@ -1766,8 +1766,8 @@ class Trainer:
         from accelerate import dispatch_model
         local_rank = os.environ.get('LOCAL_RANK')
         print('local_rank', local_rank, args.device)
-        model = dispatch_model(model, device_map={'': int(str(args.device).split(':')[-1])})
-        model = model.to(args.device)
+        # model = dispatch_model(model, device_map={'': int(str(args.device).split(':')[-1])})
+        # model = model.to(args.device)
 
         model.zero_grad()
 
