@@ -1919,7 +1919,7 @@ class TrainingArguments:
                     torch.cuda.set_device(device)
         
         print('LOCAL_RANK', os.environ.get('LOCAL_RANK'))
-        device = torch.device("cuda", os.environ.get('LOCAL_RANK'))
+        device = torch.device("cuda", int(os.environ.get('LOCAL_RANK')))
         torch.cuda.set_device(device)
         return device
 
