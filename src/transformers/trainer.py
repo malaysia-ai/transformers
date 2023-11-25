@@ -1760,7 +1760,8 @@ class Trainer:
 
         from accelerate import dispatch_model
         local_rank = os.environ.get('LOCAL_RANK')
-        model = dispatch_model(model, device_map={'': int(local_rank)})
+        print('local_rank', local_rank, args.device)
+        model = model.to(args.device)
 
         for i in model.named_parameters():
             print(f"{i[0]} -> {i[1].device}")
@@ -2707,7 +2708,7 @@ class Trainer:
 
         with self.compute_loss_context_manager():
             for k in inputs:
-                inputs[k] = inputs[k].to(f'cuda:{local_rank}')
+                inputs[k] = inputs[k].to(self.args.device)
 
             print(inputs)
             loss = self.compute_loss(model, inputs)
