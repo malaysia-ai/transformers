@@ -1759,7 +1759,11 @@ class Trainer:
         self._globalstep_last_logged = self.state.global_step
 
         from accelerate import dispatch_model
-        model = dispatch_model(model, device_map={'': 0})
+        local_rank = os.environ.get('LOCAL_RANK')
+        model = dispatch_model(model, device_map={'': int(local_rank)})
+
+        for i in model.named_parameters():
+            print(f"{i[0]} -> {i[1].device}")
         model.zero_grad()
 
         self.control = self.callback_handler.on_train_begin(args, self.state, self.control)
@@ -2694,6 +2698,7 @@ class Trainer:
             `torch.Tensor`: The tensor with training loss on this batch.
         """
         model.train()
+        local_rank = os.environ.get('LOCAL_RANK')
         inputs = self._prepare_inputs(inputs)
 
         if is_sagemaker_mp_enabled():
@@ -2702,8 +2707,9 @@ class Trainer:
 
         with self.compute_loss_context_manager():
             for k in inputs:
-                inputs[k] = inputs[k].to('cuda:0')
+                inputs[k] = inputs[k].to(f'cuda:{local_rank}')
 
+            print(inputs)
             loss = self.compute_loss(model, inputs)
 
         if self.args.n_gpu > 1:
