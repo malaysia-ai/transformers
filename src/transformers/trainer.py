@@ -1667,6 +1667,7 @@ class Trainer:
                 )
             for i in model.named_parameters():
                 print(f"after {i[0]} -> {i[1].device}, {self.args.device}")
+            self.args.device = next(model.parameters()).device
 
         if self.is_fsdp_enabled:
             self.model = self.model_wrapped = model
@@ -1852,7 +1853,6 @@ class Trainer:
 
                 with self.accelerator.accumulate(model):
                     tr_loss_step = self.training_step(model, inputs)
-                    print('tr_loss_step', tr_loss_step)
 
                 if (
                     args.logging_nan_inf_filter
