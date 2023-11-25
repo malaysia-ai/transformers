@@ -2690,6 +2690,8 @@ class Trainer:
         Return:
             `torch.Tensor`: The tensor with training loss on this batch.
         """
+        for i in model.named_parameters():
+            print(f"{i[0]} -> {i[1].device}")
         model.train()
         inputs = self._prepare_inputs(inputs)
 
@@ -2700,6 +2702,9 @@ class Trainer:
         with self.compute_loss_context_manager():
             for k in inputs:
                 inputs[k] = inputs[k].to('cuda:0')
+
+            print(inputs)
+
             loss = self.compute_loss(model, inputs)
 
         if self.args.n_gpu > 1:
