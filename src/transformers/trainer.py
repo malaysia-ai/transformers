@@ -2725,7 +2725,7 @@ class Trainer:
             with amp.scale_loss(loss, self.optimizer) as scaled_loss:
                 scaled_loss.backward()
         else:
-            print('accelerator.backward before')
+            print('accelerator.backward before', self.accelerator.backward)
             self.accelerator.backward(loss)
             print('accelerator.backward after')
 
