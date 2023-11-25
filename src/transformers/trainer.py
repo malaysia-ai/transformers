@@ -1758,10 +1758,11 @@ class Trainer:
         self._total_loss_scalar = 0.0
         self._globalstep_last_logged = self.state.global_step
 
+        
         from accelerate import dispatch_model
         local_rank = os.environ.get('LOCAL_RANK')
         print('local_rank', local_rank, args.device)
-        model = dispatch_model(model, device_map={'': int(args.device.split(':')[-1])})
+        model = dispatch_model(model, device_map={'': int(str(args.device).split(':')[-1])})
         model = model.to(args.device)
 
         model.zero_grad()
