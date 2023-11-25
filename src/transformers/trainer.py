@@ -1763,8 +1763,6 @@ class Trainer:
         print('local_rank', local_rank, args.device)
         model = model.to(args.device)
 
-        for i in model.named_parameters():
-            print(f"{i[0]} -> {i[1].device}")
         model.zero_grad()
 
         self.control = self.callback_handler.on_train_begin(args, self.state, self.control)
@@ -2709,8 +2707,9 @@ class Trainer:
         with self.compute_loss_context_manager():
             for k in inputs:
                 inputs[k] = inputs[k].to(self.args.device)
-
+            
             loss = self.compute_loss(model, inputs)
+            print(loss)
 
         if self.args.n_gpu > 1:
             loss = loss.mean()  # mean() to average on multi-gpu parallel training
