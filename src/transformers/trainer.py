@@ -2719,13 +2719,17 @@ class Trainer:
         if self.args.n_gpu > 1:
             loss = loss.mean()  # mean() to average on multi-gpu parallel training
 
+        print('loss2', loss)
+
         if self.use_apex:
             with amp.scale_loss(loss, self.optimizer) as scaled_loss:
                 scaled_loss.backward()
         else:
+            print('accelerator.backward before')
             self.accelerator.backward(loss)
+            print('accelerator.backward after')
 
-        print('loss2', loss)
+        print('loss3', loss)
         return loss.detach() / self.args.gradient_accumulation_steps
 
     def compute_loss(self, model, inputs, return_outputs=False):
