@@ -2714,7 +2714,7 @@ class Trainer:
             
             print(inputs['input_ids'].shape)
             loss = self.compute_loss(model, inputs)
-            print(loss)
+            print('loss1', loss)
 
         if self.args.n_gpu > 1:
             loss = loss.mean()  # mean() to average on multi-gpu parallel training
@@ -2725,6 +2725,7 @@ class Trainer:
         else:
             self.accelerator.backward(loss)
 
+        print('loss2', loss)
         return loss.detach() / self.args.gradient_accumulation_steps
 
     def compute_loss(self, model, inputs, return_outputs=False):
