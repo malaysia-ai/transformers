@@ -2710,7 +2710,6 @@ class Trainer:
             for k in inputs:
                 inputs[k] = inputs[k].to(self.args.device)
 
-            print(inputs)
             loss = self.compute_loss(model, inputs)
 
         if self.args.n_gpu > 1:
