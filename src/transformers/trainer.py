@@ -1850,6 +1850,7 @@ class Trainer:
 
                 with self.accelerator.accumulate(model):
                     tr_loss_step = self.training_step(model, inputs)
+                    print('tr_loss_step', tr_loss_step)
 
                 if (
                     args.logging_nan_inf_filter
