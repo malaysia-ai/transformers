@@ -1667,7 +1667,6 @@ class Trainer:
                 )
             for i in model.named_parameters():
                 print(f"after {i[0]} -> {i[1].device}, {self.args.device}")
-            self.args.device = next(model.parameters()).device
 
         if self.is_fsdp_enabled:
             self.model = self.model_wrapped = model
@@ -1762,11 +1761,9 @@ class Trainer:
         self._globalstep_last_logged = self.state.global_step
 
         
-        from accelerate import dispatch_model
         local_rank = os.environ.get('LOCAL_RANK')
-        print('local_rank', local_rank, args.device)
-        # model = dispatch_model(model, device_map={'': int(str(args.device).split(':')[-1])})
-        # model = model.to(args.device)
+        print('local_rank', local_rank, args.device, next(model.parameters()).device)
+        tr_loss = torch.tensor(0.0).to(next(model.parameters()).device)
 
         model.zero_grad()
 
@@ -2703,6 +2700,7 @@ class Trainer:
             `torch.Tensor`: The tensor with training loss on this batch.
         """
         model.train()
+        device = next(model.parameters()).device
         local_rank = os.environ.get('LOCAL_RANK')
         inputs = self._prepare_inputs(inputs)
 
@@ -2712,7 +2710,7 @@ class Trainer:
 
         with self.compute_loss_context_manager():
             for k in inputs:
-                inputs[k] = inputs[k].to(self.args.device)
+                inputs[k] = inputs[k].to(device)
             
             print(inputs['input_ids'].shape)
             loss = self.compute_loss(model, inputs)
