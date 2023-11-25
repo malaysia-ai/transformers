@@ -2698,6 +2698,7 @@ class Trainer:
             return loss_mb.reduce_mean().detach().to(self.args.device)
 
         with self.compute_loss_context_manager():
+            print(inputs)
             loss = self.compute_loss(model, inputs)
 
         if self.args.n_gpu > 1:
@@ -2721,6 +2722,7 @@ class Trainer:
             labels = inputs.pop("labels")
         else:
             labels = None
+            
         outputs = model(**inputs)
         # Save past state if it exists
         # TODO: this needs to be fixed and made cleaner later.
