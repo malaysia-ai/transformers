@@ -796,7 +796,6 @@ class Trainer:
         }
 
         if not isinstance(train_dataset, torch.utils.data.IterableDataset):
-            dataloader_params["sampler"] = self._get_train_sampler()
             dataloader_params["drop_last"] = self.args.dataloader_drop_last
             dataloader_params["worker_init_fn"] = seed_worker
 
